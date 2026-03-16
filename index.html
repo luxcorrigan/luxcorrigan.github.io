@@ -296,15 +296,37 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      nav { padding: 1.4rem 2rem; }
-      nav ul { gap: 1.5rem; }
-      #hero { padding: 0 6vw; }
-      section { padding: 5rem 6vw; }
-      #bio .bio-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
-      footer { flex-direction: column; gap: .8rem; text-align: center; }
+      /* Nav */
+      nav { padding: 1.2rem 1.4rem; }
+      nav .logo { font-size: .9rem; letter-spacing: .12em; }
+      nav ul { gap: 1.2rem; }
+      nav ul a { font-size: .65rem; letter-spacing: .15em; }
+
+      /* Hero */
+      #hero { padding: 5rem 6vw 3rem; min-height: 100svh; justify-content: center; }
+      h1 { font-size: clamp(2.6rem, 13vw, 4.5rem); }
+      .hero-sub { flex-wrap: wrap; gap: .5rem .8rem; font-size: .68rem; letter-spacing: .15em; }
+      .hero-cta { margin-top: 2.5rem; }
+
+      /* Sections */
+      section { padding: 4rem 6vw; }
+
+      /* Bio */
+      #bio .bio-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      #bio .bio-aside h2 { font-size: clamp(2rem, 9vw, 3rem); }
+      #bio .bio-text p { font-size: .95rem; line-height: 1.8; }
+
+      /* Contact */
+      .contact-links { flex-direction: column; align-items: center; gap: 1.8rem; }
+      .contact-link .cl-value { font-size: .95rem; word-break: break-all; text-align: center; }
+
+      /* Footer */
+      footer { flex-direction: column; gap: .8rem; text-align: center; padding: 1.8rem 6vw; }
+    }
+
+    @media (max-width: 400px) {
+      nav .logo { font-size: .8rem; }
+      h1 { font-size: 2.4rem; }
     }
   </style>
 </head>
@@ -357,14 +379,13 @@
     <h2>Let's make<br><em>something</em></h2>
     <p class="contact-sub">For commissions, orchestration work, engraving projects, or general inquiries.</p>
     <div class="contact-links">
-      <!-- ✏️ Replace with your real email / social links -->
       <a href="mailto:luxxecompositions@gmail.com" class="contact-link">
         <span class="cl-label">Email</span>
         <span class="cl-value">luxxecompositions@gmail.com</span>
       </a>
       <a href="https://www.linkedin.com/in/lux-corrigan/" target="_blank" class="contact-link">
         <span class="cl-label">LinkedIn</span>
-        <span class="cl-value">linkedin.com/in/lux-corrigan/</span>
+        <span class="cl-value">linkedin.com/in/lux-corrigan</span>
       </a>
     </div>
   </section>
