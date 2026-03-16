@@ -1,24 +1,378 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lux Corrigan</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lux Corrigan — Composer · Orchestrator · Engraver</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:      #0e0d0b;
+      --parchment:#f5f0e8;
+      --gold:     #b8974a;
+      --gold-dim: #8a6f33;
+      --text:     #d6cfc3;
+      --muted:    #7a7060;
+      --rule:     #2a2720;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--ink);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Noise grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: .55;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.6rem 4rem;
+      background: linear-gradient(to bottom, rgba(14,13,11,.95) 0%, rgba(14,13,11,0) 100%);
+    }
+    nav .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2.5rem;
+    }
+    nav ul a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      transition: color .3s;
+    }
+    nav ul a:hover { color: var(--gold); }
+
+    /* Hero */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 10vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 30%; left: -10%;
+      width: 70vw; height: 70vw;
+      background: radial-gradient(ellipse at center, rgba(184,151,74,.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    #hero .clef-bg {
+      position: absolute;
+      right: 4vw;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 55vw;
+      line-height: 1;
+      color: rgba(184,151,74,.03);
+      user-select: none;
+      pointer-events: none;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .hero-eyebrow {
+      font-size: .72rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      animation: fadeUp .9s .2s forwards;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 8vw, 8rem);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--parchment);
+      letter-spacing: -.01em;
+      opacity: 0;
+      animation: fadeUp 1s .45s forwards;
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      margin-top: 1.8rem;
+      font-size: .8rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp .9s .7s forwards;
+    }
+    .hero-sub .sep { color: var(--gold-dim); }
+
+    .hero-cta {
+      margin-top: 3.5rem;
+      display: inline-block;
+      padding: .85rem 2.4rem;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      text-decoration: none;
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      transition: background .3s, color .3s;
+      opacity: 0;
+      animation: fadeUp .9s .9s forwards;
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--ink); }
+
+    /* Sections */
+    section { padding: 7rem 10vw; }
+    section + section { border-top: 1px solid var(--rule); }
+
+    .section-label {
+      font-size: .65rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+      max-width: 120px;
+    }
+
+    /* Bio */
+    #bio .bio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    #bio .bio-aside h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--parchment);
+    }
+    #bio .bio-aside h2 em { font-style: italic; color: var(--gold); }
+
+    .disciplines {
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .6rem;
+    }
+    .discipline-item {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .discipline-item::before {
+      content: '◆';
+      font-size: .5rem;
+      color: var(--gold-dim);
+    }
+
+    #bio .bio-text p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    #bio .bio-text p:last-child { margin-bottom: 0; }
+
+    /* Contact */
+    #contact { text-align: center; }
+    #contact h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--parchment);
+      margin-bottom: 1rem;
+    }
+    #contact h2 em { font-style: italic; color: var(--gold); }
+    #contact .contact-sub {
+      font-size: .8rem;
+      color: var(--muted);
+      letter-spacing: .1em;
+      max-width: 38ch;
+      margin: 0 auto 3rem;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      text-decoration: none;
+      transition: transform .25s;
+    }
+    .contact-link:hover { transform: translateY(-3px); }
+    .contact-link .cl-label {
+      font-size: .62rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .contact-link .cl-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--gold);
+    }
+
+    /* Footer */
+    footer {
+      padding: 2rem 10vw;
+      border-top: 1px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .65rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 1.4rem 2rem; }
+      nav ul { gap: 1.5rem; }
+      #hero { padding: 0 6vw; }
+      section { padding: 5rem 6vw; }
+      #bio .bio-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      footer { flex-direction: column; gap: .8rem; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to my portfolio!</h1>
-    </header>
-    <main>
-        <section id="contact">
-            <h2>Contact Me</h2>
-            <p>Email: <a href="mailto:luxxecompositions@gmail.com">luxxecompositions@gmail.com</a></p>
-            <p>LinkedIn: <a href="https://www.linkedin.com/in/lux-corrigan/">linkedin.com/in/lux-corrigan</a></p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2026 Lux Corrigan</p>
-    </footer>
+
+  <nav>
+    <a href="#hero" class="logo">Lux Corrigan</a>
+    <ul>
+      <li><a href="#bio">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="clef-bg">𝄞</div>
+    <p class="hero-eyebrow">Music for the page &amp; the stage</p>
+    <h1>Lux<br><em>Corrigan</em></h1>
+    <div class="hero-sub">
+      <span>Composer</span>
+      <span class="sep">·</span>
+      <span>Orchestrator</span>
+      <span class="sep">·</span>
+      <span>Engraver</span>
+    </div>
+    <a href="#contact" class="hero-cta">Get in touch</a>
+  </section>
+
+  <section id="bio">
+    <p class="section-label">About</p>
+    <div class="bio-grid">
+      <div class="bio-aside">
+        <h2>Craft<br>at every<br><em>layer</em></h2>
+        <div class="disciplines">
+          <div class="discipline-item">Composition</div>
+          <div class="discipline-item">Orchestration</div>
+          <div class="discipline-item">Music Engraving</div>
+        </div>
+      </div>
+      <div class="bio-text">
+        <!-- ✏️ Replace this placeholder bio with your own. -->
+        <p>Lux Corrigan is a composer, orchestrator, and music engraver whose work spans concert halls, film stages, and the printed page. Drawing on a deep fluency in both classical tradition and contemporary practice, Lux brings an exacting ear and a craftsman's attention to every project.</p>
+        <p>As an orchestrator, Lux translates compositional vision into idiomatic, playable parts — collaborating closely with composers and directors to serve the music and the moment. As an engraver, Lux produces publication-quality scores and parts that communicate with clarity and elegance.</p>
+        <p>Based in [Your City], Lux is available for commissions, collaborations, and engraving projects of all scales.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <p class="section-label" style="justify-content:center;">Contact</p>
+    <h2>Let's make<br><em>something</em></h2>
+    <p class="contact-sub">For commissions, orchestration work, engraving projects, or general inquiries.</p>
+    <div class="contact-links">
+      <!-- ✏️ Replace with your real email / social links -->
+      <a href="mailto:lux@example.com" class="contact-link">
+        <span class="cl-label">Email</span>
+        <span class="cl-value">lux@example.com</span>
+      </a>
+      <a href="https://linkedin.com/in/luxcorrigan" target="_blank" class="contact-link">
+        <span class="cl-label">LinkedIn</span>
+        <span class="cl-value">linkedin.com/in/luxcorrigan</span>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Lux Corrigan</span>
+    <span>Composer · Orchestrator · Engraver</span>
+  </footer>
+
 </body>
 </html>
